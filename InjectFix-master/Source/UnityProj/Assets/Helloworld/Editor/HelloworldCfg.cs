@@ -12,13 +12,10 @@ using System;
 //1、配置类必须打[Configure]标签
 //2、必须放Editor目录
 [Configure]
-public class HelloworldCfg
-{
+public class HelloworldCfg {
     [IFix]
-    static IEnumerable<Type> hotfix
-    {
-        get
-        {
+    static IEnumerable<Type> hotfix {
+        get {
             return new List<Type>()
             {
                 typeof(Helloworld),
@@ -30,9 +27,8 @@ public class HelloworldCfg
     }
 
     [IFix.Filter]
-    static bool Filter(System.Reflection.MethodInfo methodInfo)
-    {
-        return methodInfo.DeclaringType.FullName == "IFix.Test.Calculator" 
+    static bool Filter(System.Reflection.MethodInfo methodInfo) {
+        return methodInfo.DeclaringType.FullName == "IFix.Test.Calculator"
             && (methodInfo.Name == "Div" || methodInfo.Name == "Mult");
     }
 }

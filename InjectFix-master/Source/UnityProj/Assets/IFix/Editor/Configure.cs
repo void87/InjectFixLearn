@@ -18,37 +18,30 @@ using System;
     *  3、IFix、Interpret、ReverseWrapper配置须放到Editor目录下；
 *************************************************************************************************/
 
-namespace IFix
-{
+namespace IFix {
     //放置配置的
     [AttributeUsage(AttributeTargets.Class)]
-    public class ConfigureAttribute : Attribute
-    {
+    public class ConfigureAttribute : Attribute {
 
     }
 
     //默认执行原生代码，能切换到解析执行，必须放在标记了Configure的类里
     [AttributeUsage(AttributeTargets.Property)]
-    public class IFixAttribute : Attribute
-    {
+    public class IFixAttribute : Attribute {
     }
 
     //生成反向（解析调用原生）封装器，加速调用性能
     [AttributeUsage(AttributeTargets.Property)]
-    public class ReverseWrapperAttribute : Attribute
-    {
+    public class ReverseWrapperAttribute : Attribute {
     }
 
     [AttributeUsage(AttributeTargets.Method)]
-    public class FilterAttribute : Attribute
-    {
+    public class FilterAttribute : Attribute {
     }
 
-    public static class Configure
-    {
+    public static class Configure {
         //
-        public static Dictionary<string, List<KeyValuePair<object, int>>> GetConfigureByTags(List<string> tags)
-        {
+        public static Dictionary<string, List<KeyValuePair<object, int>>> GetConfigureByTags(List<string> tags) {
             var types = from assembly in AppDomain.CurrentDomain.GetAssemblies()
                         where !(assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder)
                         from type in assembly.GetTypes()
@@ -56,26 +49,19 @@ namespace IFix
                         select type;
             var tagsMap = tags.ToDictionary(t => t, t => new List<KeyValuePair<object, int>>());
 
-            foreach(var type in types)
-            {
+            foreach (var type in types) {
                 foreach (var prop in type.GetProperties(BindingFlags.Static | BindingFlags.Public
-                    | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
-                {
-                    if (typeof(IEnumerable).IsAssignableFrom(prop.PropertyType))
-                    {
-                        foreach (var ca in prop.GetCustomAttributes(false))
-                        {
+                    | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)) {
+                    if (typeof(IEnumerable).IsAssignableFrom(prop.PropertyType)) {
+                        foreach (var ca in prop.GetCustomAttributes(false)) {
                             int flag = 0;
                             var fp = ca.GetType().GetProperty("Flag");
-                            if (fp != null)
-                            {
+                            if (fp != null) {
                                 flag = (int)fp.GetValue(ca, null);
                             }
                             List<KeyValuePair<object, int>> infos;
-                            if (tagsMap.TryGetValue(ca.GetType().ToString(), out infos))
-                            {
-                                foreach (var applyTo in prop.GetValue(null, null) as IEnumerable)
-                                {
+                            if (tagsMap.TryGetValue(ca.GetType().ToString(), out infos)) {
+                                foreach (var applyTo in prop.GetValue(null, null) as IEnumerable) {
                                     infos.Add(new KeyValuePair<object, int>(applyTo, flag));
                                 }
                             }
@@ -86,8 +72,7 @@ namespace IFix
             return tagsMap;
         }
 
-        public static List<MethodInfo> GetFilters()
-        {
+        public static List<MethodInfo> GetFilters() {
             var types = from assembly in AppDomain.CurrentDomain.GetAssemblies()
                         where !(assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder)
                         from type in assembly.GetTypes()
@@ -95,13 +80,10 @@ namespace IFix
                         select type;
 
             List<MethodInfo> filters = new List<MethodInfo>();
-            foreach (var type in types)
-            {
+            foreach (var type in types) {
                 foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public
-                    | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
-                {
-                    if(method.IsDefined(typeof(IFix.FilterAttribute), false))
-                    {
+                    | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)) {
+                    if (method.IsDefined(typeof(IFix.FilterAttribute), false)) {
                         filters.Add(method);
                     }
                 }
@@ -109,8 +91,7 @@ namespace IFix
             return filters;
         }
 
-        public static IEnumerable<MethodInfo> GetTagMethods(Type tagType, string searchAssembly)
-        {
+        public static IEnumerable<MethodInfo> GetTagMethods(Type tagType, string searchAssembly) {
             return (from assembly in AppDomain.CurrentDomain.GetAssemblies()
                     where !(assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder)
                         && (assembly.GetName().Name == searchAssembly)
@@ -122,8 +103,7 @@ namespace IFix
                     select method);
         }
 
-        public static IEnumerable<FieldInfo> GetTagFields(Type tagType, string searchAssembly)
-        {
+        public static IEnumerable<FieldInfo> GetTagFields(Type tagType, string searchAssembly) {
             return (from assembly in AppDomain.CurrentDomain.GetAssemblies()
                     where !(assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder)
                         && (assembly.GetName().Name == searchAssembly)
@@ -135,8 +115,7 @@ namespace IFix
                     select field);
         }
 
-        public static IEnumerable<PropertyInfo> GetTagProperties(Type tagType, string searchAssembly)
-        {
+        public static IEnumerable<PropertyInfo> GetTagProperties(Type tagType, string searchAssembly) {
             return (from assembly in AppDomain.CurrentDomain.GetAssemblies()
                     where !(assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder)
                         && (assembly.GetName().Name == searchAssembly)
@@ -148,8 +127,7 @@ namespace IFix
                     select property);
         }
 
-        public static IEnumerable<Type> GetTagClasses(Type tagType, string searchAssembly)
-        {
+        public static IEnumerable<Type> GetTagClasses(Type tagType, string searchAssembly) {
             return (from assembly in AppDomain.CurrentDomain.GetAssemblies()
                     where !(assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder)
                         && (assembly.GetName().Name == searchAssembly)

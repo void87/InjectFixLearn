@@ -5,30 +5,34 @@
  * This file is subject to the terms and conditions defined in file 'LICENSE', which is part of this source code package.
  */
 
-namespace IFix.Test
-{
+namespace IFix.Test {
     //HelloworldCfg.cs里配置了这个类型
-    public class Calculator
-    {
+    public class Calculator {
         //修改成正确的逻辑后，打开如下注释，生成的补丁将修正该函数
-        //[Patch]
-        public int Add(int a, int b)
-        {
+
+        // 错误的版本
+        public int Add(int a, int b) {
             return a * b;
         }
 
-        public int Sub(int a, int b)
-        {
+        // 正确的版本,添加 [IFix.Patch]
+        // PatchManager.Load() 加载完补丁后, 会执行下面正确的代码
+        //[Patch]
+        //public int Add(int a, int b) {
+        //    // 修复了错误的代码
+        //    return a + b;
+        //}
+
+
+        public int Sub(int a, int b) {
             return a / b;
         }
 
-        public int Mult(int a, int b)
-        {
+        public int Mult(int a, int b) {
             return a * b;
         }
 
-        public int Div(int a, int b)
-        {
+        public int Div(int a, int b) {
             return a / b;
         }
     }
