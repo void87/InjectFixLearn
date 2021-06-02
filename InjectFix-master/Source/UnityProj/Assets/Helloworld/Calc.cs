@@ -15,13 +15,43 @@ namespace IFix.Test {
             return a * b;
         }
 
-        // 正确的版本,添加 [IFix.Patch]
-        // PatchManager.Load() 加载完补丁后, 会执行下面正确的代码
+        //// 正确的版本,添加 [IFix.Patch]
+        //// PatchManager.Load() 加载完补丁后, 会执行下面正确的代码
         //[Patch]
         //public int Add(int a, int b) {
+        //    UnityEngine.Debug.Log("patchNewValue: " + patchNewValue);
+        //    UnityEngine.Debug.Log("patchNewProperty: " + patchNewProperty);
+
+        //    PatchNewMethod();
+
+        //    PatchNewClass patchNewClass = new PatchNewClass();
+        //    patchNewClass.Test1();
+
         //    // 修复了错误的代码
         //    return a + b;
         //}
+
+        //[IFix.Interpret]
+        //public int patchNewValue = 0;
+
+        //[IFix.Interpret]
+        //public int patchNewProperty {
+        //    get; set;
+        //} = 2;
+
+        //[IFix.Interpret]
+        //public void PatchNewMethod() {
+        //    UnityEngine.Debug.Log("PatchNewMethod");
+        //}
+
+        //[IFix.Interpret]
+        //public class PatchNewClass {
+        //    public void Test1() {
+        //        UnityEngine.Debug.Log("PatchNewClass.Test1()");
+        //    }
+        //}
+
+
 
 
         public int Sub(int a, int b) {
