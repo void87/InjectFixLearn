@@ -7,13 +7,12 @@ using System;
 [Configure]
 public class NewClassTestCfg {
 
-	[IFix]
-    static IEnumerable<Type> hotfix
-    {
-        get
-        {
+    [IFix]
+    static IEnumerable<Type> hotfix {
+        get {
             return new List<Type>()
             {
+                // 让 NewClassTest 可以被修复
                 typeof(NewClassTest)
             };
         }

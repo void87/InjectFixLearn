@@ -141,6 +141,11 @@ public static class AdditionalBridge
     static List<Type> bridge = new List<Type>()
     {
         typeof(ISubSystem),
-        typeof(IMonoBehaviour)
+        typeof(IMonoBehaviour),
+        typeof(IFix.Test.IOriginalInterface),
+        // for 协程
+        typeof(System.Collections.Generic.IEnumerator<System.Object>),
+        // for Delegate Wrapper
+        typeof(Helloworld.MyDelegate),
     };
 }

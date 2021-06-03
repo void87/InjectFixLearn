@@ -9,17 +9,19 @@ using UnityEngine;
 using IFix.Core;
 using System.IO;
 using System.Diagnostics;
+using System.Collections;
+using UnityEngine.Networking;
+using System;
 
 // 跑不同仔细看文档Doc/example.md
 public class Helloworld : MonoBehaviour {
 
     // check and load patchs
-    void Start () {
+    void Start() {
         VirtualMachine.Info = (s) => UnityEngine.Debug.Log(s);
         //try to load patch for Assembly-CSharp.dll
         var patch = Resources.Load<TextAsset>("Assembly-CSharp.patch");
-        if (patch != null)
-        {
+        if (patch != null) {
             UnityEngine.Debug.Log("loading Assembly-CSharp.patch ...");
             var sw = Stopwatch.StartNew();
             PatchManager.Load(new MemoryStream(patch.bytes));
@@ -27,20 +29,21 @@ public class Helloworld : MonoBehaviour {
         }
         //try to load patch for Assembly-CSharp-firstpass.dll
         patch = Resources.Load<TextAsset>("Assembly-CSharp-firstpass.patch");
-        if (patch != null)
-        {
+        if (patch != null) {
             UnityEngine.Debug.Log("loading Assembly-CSharp-firstpass ...");
             var sw = Stopwatch.StartNew();
             PatchManager.Load(new MemoryStream(patch.bytes));
             UnityEngine.Debug.Log("patch Assembly-CSharp-firstpass, using " + sw.ElapsedMilliseconds + " ms");
         }
 
+
         test();
     }
 
     [IFix.Patch]
-    void test()
-    {
+    void test() {
+
+
         var calc = new IFix.Test.Calculator();
         //test calc.Add
         UnityEngine.Debug.Log("10 + 9 = " + calc.Add(10, 9));
@@ -64,5 +67,30 @@ public class Helloworld : MonoBehaviour {
         UnityEngine.Debug.Log("UNITY_ANDROID");
 #endif
 #endif
+
+        //StartCoroutine(IE_Test());
+
+        //TestDelegate();
     }
+
+    //[IFix.Interpret]
+    //public IEnumerator IE_Test() {
+    //    yield return new WaitForSeconds(1);
+    //    UnityEngine.Debug.Log("IE_Test after 1 sec");
+    //    yield return null;
+    //    UnityEngine.Debug.Log("IE_Test null");
+
+    //    UnityWebRequest uwr = new UnityWebRequest("https://www.baidu.com");
+    //    yield return  uwr.SendWebRequest();
+    //    UnityEngine.Debug.Log(uwr.error);
+    //}
+
+
+
+    public delegate int MyDelegate(int a, int b);
+
+    //[IFix.Interpret]
+    //public MyDelegate TestDelegate() {
+    //    return (a, b) => a + b;
+    //}
 }

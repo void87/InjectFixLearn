@@ -5,6 +5,8 @@
  * This file is subject to the terms and conditions defined in file 'LICENSE', which is part of this source code package.
  */
 
+using System.Collections;
+
 namespace IFix.Test {
     //HelloworldCfg.cs里配置了这个类型
     public class Calculator {
@@ -19,13 +21,16 @@ namespace IFix.Test {
         //// PatchManager.Load() 加载完补丁后, 会执行下面正确的代码
         //[Patch]
         //public int Add(int a, int b) {
-        //    UnityEngine.Debug.Log("patchNewValue: " + patchNewValue);
-        //    UnityEngine.Debug.Log("patchNewProperty: " + patchNewProperty);
+        //    //UnityEngine.Debug.Log("patchNewValue: " + patchNewValue);
+        //    //UnityEngine.Debug.Log("patchNewProperty: " + patchNewProperty);
 
-        //    PatchNewMethod();
+        //    //PatchNewMethod();
 
-        //    PatchNewClass patchNewClass = new PatchNewClass();
-        //    patchNewClass.Test1();
+        //    //PatchNewClass patchNewClass = new PatchNewClass();
+        //    //patchNewClass.Test1();
+
+        //    PatchInterfaceClass patchInterfaceClass = new PatchInterfaceClass();
+        //    patchInterfaceClass.Start();
 
         //    // 修复了错误的代码
         //    return a + b;
@@ -52,8 +57,6 @@ namespace IFix.Test {
         //}
 
 
-
-
         public int Sub(int a, int b) {
             return a / b;
         }
@@ -66,4 +69,17 @@ namespace IFix.Test {
             return a / b;
         }
     }
+
+    public interface IOriginalInterface {
+        void Start();
+    }
+
+    //[IFix.Interpret]
+    //public class PatchInterfaceClass : IOriginalInterface {
+    //    public void Start() {
+    //        UnityEngine.Debug.Log("PatchInterfaceClass.Start()");
+    //    }
+    //}
+
+    
 }
